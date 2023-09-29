@@ -50,11 +50,15 @@ export function getKind(piece) {
   }
 
 
-export function checkValidMove(board,source_row,source_column,destination_row,destination_column) 
+export function checkValidMove(board,source_row,source_column,destination_row,destination_column,current_colour) 
 {
     const piece_int = board[source_row][source_column];
     const piece = getKind(piece_int);
     const colour = getColour(piece_int);
+    if (colour !== current_colour)
+    {
+      return false;
+    }
     switch (piece) {
       case 'pawn':
         return checkValidMovePawn(board,source_row,source_column,destination_row,destination_column,colour);
@@ -218,3 +222,4 @@ export function checkValidMoveKing(board,source_row,source_column,destination_ro
   }
   return false;
 }
+

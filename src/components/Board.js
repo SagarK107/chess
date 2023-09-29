@@ -44,10 +44,11 @@ export default function Board(props) {
             const source_row = clickedSquare[0];
             const source_column = clickedSquare[1];
             
-            if (checkValidMove(board,source_row,source_column,destination_row,destination_column))
+            if (checkValidMove(board,source_row,source_column,destination_row,destination_column,currentColour))
             {                
                 board[destination_row][destination_column] = board[source_row][source_column];
                 board[source_row][source_column] = EMPTY;
+                setCurrentColour(currentColour === "white" ? "black" : "white");
             }
             else
             {
@@ -75,9 +76,11 @@ export default function Board(props) {
             board.map((r,ri) => <div>{
                 r.map((piece,ci) => <div className={ `square ${setBoardColourCSS(ri,ci)} ${setSelectedCss(ri,ci)}`} onClick={(e) => squareClickHandler(ri,ci) }>
                     {board[ri][ci] !== 0 ? <img src={`${process.env.PUBLIC_URL}/images/${imageColourMap[getColour(board[ri][ci])]}${imagePieceMap[getKind(board[ri][ci])]}.png`}></img> : <div></div>}
+                  
                 </div> )
         }</div>)}
-
+        
+        Current turn: {`${currentColour}`}
     </div>
   )
 }
