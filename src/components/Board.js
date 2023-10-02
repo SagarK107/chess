@@ -1,6 +1,6 @@
 import { click } from "@testing-library/user-event/dist/click";
 import "./board.css";
-import {checkValidMove, getColour,getKind,EMPTY,checkEnemyOnDestination} from "./utils.js"
+import {checkValidMove, getColour,getKind,EMPTY,checkEnemyOnDestination,detectCheck} from "./utils.js"
 import React, { useState } from 'react';
 
 
@@ -21,8 +21,10 @@ export default function Board(props) {
     const [isPieceClicked,setIsPieceClicked] = useState(false);
     const [currentColour,setCurrentColour] = useState("white");
     const [clickedSquare,setClickedSquare] = useState([-1,-1]);
-    
-    
+    const [whiteUnderCheck,setWhiteUnderCheck] = useState(true);
+    const [blackUnderCheck,setBlackUnderCheck] = useState(true);
+    const [whiteKingPosition,setWhiteKingPosition] = useState([7,4]);
+    const [blackKingPosition,setBlackKingPosition] = useState([0,3]);    
 
     function setBoardColourCSS(ri,ci)
     {
@@ -46,9 +48,23 @@ export default function Board(props) {
             
             if (checkValidMove(board,source_row,source_column,destination_row,destination_column,currentColour))
             {                
+                var temp_piece = board[destination_row][destination_column];
                 board[destination_row][destination_column] = board[source_row][source_column];
                 board[source_row][source_column] = EMPTY;
+                const kingPosition = currentColour === "white" ? whiteKingPosition : blackKingPosition;
+                if (detectCheck(board,kingPosition[0],kingPosition[1],currentColour))
+                {
+                    //undo the move and prompt user to try again
+                    // this wont work for castling so something else should be done for that
+                    board[source_row][source_column] = board[destination_row][destination_column];
+                    board[destination_row][destination_column] = temp_piece;
+                    console.log("King is under check. Try again")
+                }
+                else
+                {
+                    
                 setCurrentColour(currentColour === "white" ? "black" : "white");
+                }
             }
             else
             {
@@ -81,6 +97,7 @@ export default function Board(props) {
         }</div>)}
         
         Current turn: {`${currentColour}`}
+
     </div>
   )
 }

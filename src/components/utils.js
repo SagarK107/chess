@@ -145,7 +145,8 @@ export function checkValidMoveRook(board,source_row,source_column,destination_ro
   const isEnemyOnDestination = checkEnemyOnDestination(board,destination_row,destination_row,colour)
   if (source_row === destination_row)
   {
-    for (var i = source_column; i < destination_column; i++)
+    var delta = destination_column - source_column > 0 ? 1 : -1
+    for (var i = source_column + 1; i < destination_column; i += delta)
     {
       if (!checkIfDestinationSquareIsEmpty(board,source_row,i,colour))
       {
@@ -159,7 +160,8 @@ export function checkValidMoveRook(board,source_row,source_column,destination_ro
 
   if (source_column === destination_column)
   {
-    for (var i = source_row; i < destination_row; i++)
+    var delta = destination_column - source_column > 0 ? 1 : -1
+    for (var i = source_row + delta; i < destination_row; i += delta)
     {
       if (!checkIfDestinationSquareIsEmpty(board,i,source_column,colour))
       {
@@ -223,3 +225,303 @@ export function checkValidMoveKing(board,source_row,source_column,destination_ro
   return false;
 }
 
+function generateMovesRook(board,source_row,source_column,colour)
+{
+  
+  const moves = [];
+  for (var i = 1; source_row + i < 8 && checkEnemyOnDestination(board,source_row + i,source_column,colour); i++ )
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column,colour))
+    {
+      
+      moves.push([source_row + i,source_column]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column))
+    {
+      moves.push([source_row + i,source_column]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  for (var i = -1; source_row + i >= 0 && checkEnemyOnDestination(board,source_row + i,source_column,colour); i-- )
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column,colour))
+    {
+      
+      moves.push([source_row + i,source_column]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column))
+    {
+      moves.push([source_row + i,source_column]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  for (var i = 1; source_column + i < 8 && checkEnemyOnDestination(board,source_row,source_column + i,colour); i++ )
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column,colour))
+    {
+      
+      moves.push([source_row,source_column + i]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column))
+    {
+      moves.push([source_row,source_column + i]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  for (var i = -1; source_column + i >= 0 && checkEnemyOnDestination(board,source_row,source_column + i,colour); i-- )
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column,colour))
+    {
+      
+      moves.push([source_row,source_column + i]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column))
+    {
+      moves.push([source_row,source_column + i]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+  return moves;
+}
+
+function generateMovesBishop(board,source_row,source_column,colour)
+{
+  var moves = [];
+  for (var i = 1, j = 1; source_row + i < 8 && source_column + j < 8; i++,j++)
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column + j,colour))
+    {
+      
+      moves.push([source_row + i,source_column + j]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    {
+      moves.push([source_row + i,source_column + j]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  for (var i = 1, j = -1; source_row + i < 8 && source_column + j >= 0; i++,j--)
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column + j,colour))
+    {
+      
+      moves.push([source_row + i,source_column + j]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    {
+      moves.push([source_row + i,source_column + j]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  for (var i = -1, j = 1; source_row + i >= 0 && source_column + j < 8; i--,j++)
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column + j,colour))
+    {
+      
+      moves.push([source_row + i,source_column + j]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    {
+      moves.push([source_row + i,source_column + j]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  for (var i = -1, j = -1; source_row + i >= 0 && source_column + j >= 0; i--,j--)
+  {
+    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column + j,colour))
+    {
+      
+      moves.push([source_row + i,source_column + j]);
+    }
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    {
+      moves.push([source_row + i,source_column + j]);
+      break;
+    }
+    else
+    {
+      break;
+    }
+  }
+  return moves;
+}
+
+function generateMovesKnight(board,source_row,source_column,colour)
+{
+  const KNIGHT_MOVES_DELTA = [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]];
+  var moves = [];
+  for (var m of KNIGHT_MOVES_DELTA)
+  {
+    var row_delta = m[0];
+    var column_delta  = m[1];
+    if (source_row + row_delta >= 0 && source_row + row_delta < 8 && source_column + column_delta >= 0 && source_column + column_delta < 8 
+      && (checkIfDestinationSquareIsEmpty(board,source_row + row_delta,source_column + column_delta) || checkEnemyOnDestination(board, source_row + row_delta, source_column + column_delta,colour)))
+    {
+      moves.push([source_row + row_delta, source_column + column_delta])
+    }
+  }
+  return moves;
+}
+
+function generateMovesQueen(board,source_row,source_column,colour)
+{
+  var moves = [];
+  var moves_b = generateMovesBishop(board,source_row,source_column,colour).map(e => moves.push(e));
+  var moves_r = generateMovesRook(board,source_row,source_column,colour).map(e => moves.push(e));
+  moves  = moves_b.concat(moves_r);
+  return moves;
+}
+
+function generateMovesKing(board,source_row,source_column,colour)
+{
+  const KING_MOVES_DELTA = [[1,1],[1,-1],[-1,1],[-1,-1],[0,1],[0,-1],[1,0],[-1,0]];
+  var moves = [];
+  for (var m of KING_MOVES_DELTA)
+  {
+    var row_delta = m[0];
+    var column_delta  = m[1];
+    if (source_row + row_delta >= 0 && source_row + row_delta < 8 && source_column + column_delta >= 0 && source_column + column_delta < 8 
+      && (checkIfDestinationSquareIsEmpty(board,source_row + row_delta,source_column + column_delta) || checkEnemyOnDestination(board, source_row + row_delta, source_column + column_delta,colour)))
+    {
+      moves.push([source_row + row_delta, source_column + column_delta])
+    }
+  }
+  return moves;
+}
+
+// Generates all moves from current square for each piece and sees if the corresponding piece can reach the king. If yes, its a check.
+function generateMovesPawn(board,source_row,source_column,colour)
+{
+  var moves = [];
+  if (colour === "white")
+  {
+    
+  if (checkEnemyOnDestination(board,source_row - 1,source_column + 1,colour))
+    {
+      moves.push([source_row - 1, source_column + 1])
+    }
+  if (checkEnemyOnDestination(board,source_row - 1,source_column - 1,colour))
+  {
+    moves.push([source_row - 1, source_column - 1])
+  }
+
+  if (source_row === 6 && !checkEnemyOnDestination(board,source_row - 2, source_column,colour))
+  {
+    moves.push([source_row-2,source_column])
+  }
+
+  else if (!checkEnemyOnDestination(board,source_row - 1, source_column,colour))
+  {
+    moves.push([source_row-1, source_column])
+  }
+  }
+
+  if (colour === "black")
+  {
+    
+  if (checkEnemyOnDestination(board,source_row + 1,source_column + 1,colour))
+    {
+      moves.push([source_row + 1, source_column + 1])
+    }
+  if (checkEnemyOnDestination(board,source_row + 1,source_column - 1,colour))
+  {
+    moves.push([source_row + 1, source_column - 1])
+  }
+
+  if (source_row === 1 && !checkEnemyOnDestination(board,source_row + 2, source_column,colour) && checkIfDestinationSquareIsEmpty(board,source_row + 2, source_column,colour))
+  {
+    moves.push([source_row + 2,source_column])
+  }
+
+  else if (!checkEnemyOnDestination(board,source_row + 1, source_column,colour) && checkIfDestinationSquareIsEmpty(board,source_row + 1, source_column,colour))
+  {
+    moves.push([source_row + 1, source_column])
+  }
+  }
+  return moves;
+}
+export function detectCheck(board,source_row,source_column,colour)
+{
+  var moves = [];
+  
+  var moves_bishop = generateMovesBishop(board,source_row,source_column,colour);
+  for (var move of moves_bishop)
+  {
+    if ((getKind(board[move[0]][move[1]]) === "bishop" || getKind(board[move[0]][move[1]]) === "queen") && getColour(board[move[0]][move[1]]) !== colour)
+    {
+      return true;
+    }
+  }
+  var moves_rook  = generateMovesRook(board,source_row,source_column,colour);
+  
+  for (var move of moves_rook)
+  {
+    if ((getKind(board[move[0]][move[1]]) === "rook" || getKind(board[move[0]][move[1]]) === "queen") && getColour(board[move[0]][move[1]]) !== colour)
+    {
+      return true;
+    }
+  }
+  var moves_knight = generateMovesKnight(board,source_row,source_column,colour);
+  for (var move of moves_knight)
+  {
+    if (getKind(board[move[0]][move[1]]) === "knight" && getColour(board[move[0]][move[1]]) !== colour)
+    {
+      return true;
+    }
+  }
+  // generateMovesKing(board,source_row,source_column,colour).map(e => moves.push(e));
+ 
+  var moves_pawn = generateMovesPawn(board,source_row,source_column,colour);
+  for (var move of moves_pawn)
+  {
+    if (getKind(board[move[0]][move[1]]) === "pawn" && getColour(board[move[0]][move[1]]) !== colour)
+    {
+      return true;
+    }
+  }
+  var moves_king = generateMovesKing(board,source_row,source_column,colour);
+  for (var move of moves_king)
+  {
+    if (getKind(board[move[0]][move[1]]) === "king" && getColour(board[move[0]][move[1]]) !== colour)
+    {
+      return true;
+    }
+  }
+
+  return false;
+  
+}
