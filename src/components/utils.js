@@ -306,6 +306,7 @@ function generateMovesRook(board,source_row,source_column,colour)
 function generateMovesBishop(board,source_row,source_column,colour)
 {
   var moves = [];
+  
   for (var i = 1, j = 1; source_row + i < 8 && source_column + j < 8; i++,j++)
   {
     if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column + j,colour))
@@ -479,6 +480,7 @@ export function detectCheck(board,source_row,source_column,colour)
   var moves = [];
   
   var moves_bishop = generateMovesBishop(board,source_row,source_column,colour);
+  
   for (var move of moves_bishop)
   {
     if ((getKind(board[move[0]][move[1]]) === "bishop" || getKind(board[move[0]][move[1]]) === "queen") && getColour(board[move[0]][move[1]]) !== colour)

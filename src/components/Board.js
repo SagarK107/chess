@@ -23,8 +23,8 @@ export default function Board(props) {
     const [clickedSquare,setClickedSquare] = useState([-1,-1]);
     const [whiteUnderCheck,setWhiteUnderCheck] = useState(true);
     const [blackUnderCheck,setBlackUnderCheck] = useState(true);
-    const [whiteKingPosition,setWhiteKingPosition] = useState([7,4]);
-    const [blackKingPosition,setBlackKingPosition] = useState([0,3]);    
+    const [whiteKingPosition,setWhiteKingPosition] = useState([0,3]);
+    const [blackKingPosition,setBlackKingPosition] = useState([7,4]);    
 
     function setBoardColourCSS(ri,ci)
     {
@@ -52,6 +52,7 @@ export default function Board(props) {
                 board[destination_row][destination_column] = board[source_row][source_column];
                 board[source_row][source_column] = EMPTY;
                 const kingPosition = currentColour === "white" ? whiteKingPosition : blackKingPosition;
+                console.log(kingPosition,board[kingPosition[0]][kingPosition[1]])
                 if (detectCheck(board,kingPosition[0],kingPosition[1],currentColour))
                 {
                     //undo the move and prompt user to try again
