@@ -160,7 +160,7 @@ export function checkValidMoveRook(board,source_row,source_column,destination_ro
 
   if (source_column === destination_column)
   {
-    var delta = destination_column - source_column > 0 ? 1 : -1
+    var delta = destination_row - source_row > 0 ? 1 : -1
     for (var i = source_row + delta; i < destination_row; i += delta)
     {
       if (!checkIfDestinationSquareIsEmpty(board,i,source_column,colour))
