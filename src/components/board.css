@@ -15,3 +15,7 @@
 .selected {
     background-color: yellow;
 }
+
+.check {
+    background-color: red;
+}

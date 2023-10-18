@@ -69,7 +69,7 @@ export function checkValidMove(board,source_row,source_column,destination_row,de
       case 'bishop':
         return checkValidMoveBishop(board,source_row,source_column,destination_row,destination_column,colour);
       case 'queen':
-        return checkValidMoveKnight(board,source_row,source_column,destination_row,destination_column,colour) ||
+        return checkValidMoveRook(board,source_row,source_column,destination_row,destination_column,colour) ||
                 checkValidMoveBishop(board,source_row,source_column,destination_row,destination_column,colour);
       case 'king':
         return checkValidMoveKing(board,source_row,source_column,destination_row,destination_column,colour);
@@ -146,7 +146,7 @@ export function checkValidMoveRook(board,source_row,source_column,destination_ro
   if (source_row === destination_row)
   {
     var delta = destination_column - source_column > 0 ? 1 : -1
-    for (var i = source_column + 1; i < destination_column; i += delta)
+    for (var i = source_column + delta; i < destination_column; i += delta)
     {
       if (!checkIfDestinationSquareIsEmpty(board,source_row,i,colour))
       {
@@ -267,12 +267,12 @@ function generateMovesRook(board,source_row,source_column,colour)
 
   for (var i = 1; source_column + i < 8 && checkEnemyOnDestination(board,source_row,source_column + i,colour); i++ )
   {
-    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column,colour))
+    if (checkIfDestinationSquareIsEmpty(board,source_row, source_column + i,colour))
     {
       
       moves.push([source_row,source_column + i]);
     }
-    else if (checkEnemyOnDestination(board,source_row + i, source_column))
+    else if (checkEnemyOnDestination(board,source_row, source_column + i))
     {
       moves.push([source_row,source_column + i]);
       break;
@@ -285,12 +285,12 @@ function generateMovesRook(board,source_row,source_column,colour)
 
   for (var i = -1; source_column + i >= 0 && checkEnemyOnDestination(board,source_row,source_column + i,colour); i-- )
   {
-    if (checkIfDestinationSquareIsEmpty(board,source_row + i, source_column,colour))
+    if (checkIfDestinationSquareIsEmpty(board,source_row, source_column + i,colour))
     {
       
       moves.push([source_row,source_column + i]);
     }
-    else if (checkEnemyOnDestination(board,source_row + i, source_column))
+    else if (checkEnemyOnDestination(board,source_row, source_column + i))
     {
       moves.push([source_row,source_column + i]);
       break;
@@ -314,7 +314,7 @@ function generateMovesBishop(board,source_row,source_column,colour)
       
       moves.push([source_row + i,source_column + j]);
     }
-    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j,colour))
     {
       moves.push([source_row + i,source_column + j]);
       break;
@@ -332,7 +332,7 @@ function generateMovesBishop(board,source_row,source_column,colour)
       
       moves.push([source_row + i,source_column + j]);
     }
-    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j,colour))
     {
       moves.push([source_row + i,source_column + j]);
       break;
@@ -350,7 +350,7 @@ function generateMovesBishop(board,source_row,source_column,colour)
       
       moves.push([source_row + i,source_column + j]);
     }
-    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j,colour))
     {
       moves.push([source_row + i,source_column + j]);
       break;
@@ -368,7 +368,7 @@ function generateMovesBishop(board,source_row,source_column,colour)
       
       moves.push([source_row + i,source_column + j]);
     }
-    else if (checkEnemyOnDestination(board,source_row + i, source_column + j))
+    else if (checkEnemyOnDestination(board,source_row + i, source_column + j,colour))
     {
       moves.push([source_row + i,source_column + j]);
       break;
@@ -378,6 +378,7 @@ function generateMovesBishop(board,source_row,source_column,colour)
       break;
     }
   }
+  console.log(`Bishop moves: ${moves.toString()}`)
   return moves;
 }
 
@@ -428,10 +429,15 @@ function generateMovesKing(board,source_row,source_column,colour)
 function generateMovesPawn(board,source_row,source_column,colour)
 {
   var moves = [];
+ 
   if (colour === "white")
   {
+    if (source_row === 7 || source_row == 0)
+    {
+      return moves;
+    }
     
-  if (checkEnemyOnDestination(board,source_row - 1,source_column + 1,colour))
+  if (source_row > 0 && checkEnemyOnDestination(board,source_row - 1,source_column + 1,colour))
     {
       moves.push([source_row - 1, source_column + 1])
     }
@@ -445,7 +451,7 @@ function generateMovesPawn(board,source_row,source_column,colour)
     moves.push([source_row-2,source_column])
   }
 
-  else if (!checkEnemyOnDestination(board,source_row - 1, source_column,colour))
+  else if (source_row > 0 && !checkEnemyOnDestination(board,source_row - 1, source_column,colour))
   {
     moves.push([source_row-1, source_column])
   }
@@ -453,7 +459,10 @@ function generateMovesPawn(board,source_row,source_column,colour)
 
   if (colour === "black")
   {
-    
+    if (source_row === 0 || source_row === 7) 
+    {
+      return moves;
+    }
   if (checkEnemyOnDestination(board,source_row + 1,source_column + 1,colour))
     {
       moves.push([source_row + 1, source_column + 1])
